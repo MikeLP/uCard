@@ -1,0 +1,71 @@
+{
+  "name": "uCard",
+  "version": "1.0.0",
+  "description": "uCard - application of cards management",
+  "homepage": "http://google.com",
+  "main": "sources/app/init.js",
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "engines": {
+    "node": ">=6.1.0"
+  },
+  "scripts": {
+    "lint": "node_modules/.bin/eslint ./sources/",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV='production' electron .",
+    "start:dev": "NODE_ENV='development' electron .",
+    "dist:osx": "build --platform darwin"
+  },
+  "build": {
+    "appId": "hr.creaticon.eatodo",
+    "app-category-type": "public.app-category.productivity",
+    "asar": {
+      "unpack": "**/database/*"
+    },
+    "mac": {
+      "icon": "./sources/app/resources/icons/app/buildings.icns"
+    },
+    "win": {}
+  },
+  "contributors": [],
+  "bugs": {
+    "url": "https://github.com/owner/project/issues",
+    "email": "project@hostname.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/electron/electron-quick-start.git"
+  },
+  "keywords": [
+    "javascript",
+    "nodejs",
+    "electron"
+  ],
+  "author": {
+    "name": "Yan Zhabin",
+    "email": "iyanello@gmail.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "ionicons": "^3.0.0",
+    "knex": "^0.11.9",
+    "leaflet": "^1.0.0-rc.2",
+    "leaflet-draw": "^0.3.0",
+    "lodash": "^4.14.0",
+    "moment": "^2.14.1",
+    "normalize.css": "^4.2.0",
+    "sqlite3": "^3.1.4",
+    "vue": "^2.0.0-beta.5"
+  },
+  "devDependencies": {
+    "electron-builder": "^5.17.0",
+    "electron-prebuilt": "^1.3.1",
+    "electron-rebuild": "^1.1.5",
+    "eslint": "^3.1.1",
+    "eslint-plugin-node": "^2.0.0",
+    "node-gyp": "^3.4.0"
+  }
+}

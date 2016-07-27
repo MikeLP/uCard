@@ -1,0 +1,26 @@
+.control-panel-container {
+    height: 45px;
+    width: 100%;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.control-panel-container .panel {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    /*padding-left: 20px;*/
+    /*padding-right: 50px;*/
+}
+
+.control-panel-container .panel .icon {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.control-panel-container .panel .icon.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    color: #dddddd;
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>uCard</title>
+    <link rel="stylesheet" href="../../node_modules/normalize.css/normalize.css" media="screen"
+          charset="utf-8">
+    <link rel="stylesheet" href="../../node_modules/ionicons/dist/css/ionicons.css" media="screen"
+          charset="utf-8">
+    <link rel="stylesheet" href="./resources/css/style.css">
+    <link rel="stylesheet" href="../../node_modules/leaflet/dist/leaflet.css">
+    <script async type="text/javascript" src="main.js"></script>
+</head>
+
+<body id="app">
+<intro v-if="showWelcomeScreen"></intro>
+<navigation></navigation>
+<cards keep-alive v-if="currentView === 'cards'"></cards>
+</body>
+</html>

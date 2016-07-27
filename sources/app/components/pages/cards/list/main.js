@@ -1,0 +1,196 @@
+'use strict';
+
+const EventEmitter = require(global.ROOT_DIR + '/libs/event.emitter');
+const CardsModel = require(global.ROOT_DIR + '/models/card');
+const MenuElements = require('./menu');
+const _ = require('lodash');
+
+//noinspection NpmUsedModulesInstalled
+const {remote} = require('electron');
+const {Menu, MenuItem, dialog} = remote;
+
+const menu = new Menu;
+
+const streets = require('./streets');
+
+
+let previousSearchQuery = '';
+
+module.exports = {
+    created() {
+        this.destroy();
+
+        let self = this;
+
+        //noinspection JSUnresolvedVariable
+        this.streets = streets.Ukraine.Odessa;
+
+        self.$parent.setState('default');
+
+        EventEmitter.on('delete:card', this.remove.bind(this));
+
+        CardsModel.sort('number').all().then((cards) => {
+            // console.log(cards);
+            self.items = cards;
+        });
+
+        MenuElements.edit.click = this.edit;
+        MenuElements.remove.click = this.remove;
+
+        menu.append(new MenuItem(MenuElements.edit), 'Edit');
+        menu.append(new MenuItem(MenuElements.save), 'Save');
+        menu.append(new MenuItem(MenuElements.separator), 'separator');
+
+        // Add click callback to submenu items
+        MenuElements.properties.submenu.forEach((item, key)=> {
+            if (['isDuplicate', 'hasIssues', 'isLost', 'reset'].contains(item.value)) {
+                item.click = self.toggleProperty.bind(self, item.value);
+                MenuElements.properties.submenu[key] = item;
+            }
+        });
+
+        menu.append(new MenuItem(MenuElements.properties), 'Properties');
+        menu.append(new MenuItem(MenuElements.separator), 'separator');
+        menu.append(new MenuItem(MenuElements.archive), 'Archive');
+        menu.append(new MenuItem(MenuElements.separator), 'separator');
+        menu.append(new MenuItem(MenuElements.remove), 'Удалить');
+    },
+
+    beforeDestroy() {
+        this.destroy();
+    },
+
+    data: () => {
+        return {
+            streets: [],
+            searchQuery: '',
+            activeIndex: null,
+            items: []
+        };
+    },
+    methods: {
+        destroy() {
+            menu.clear();
+            menu.removeAllListeners();
+            EventEmitter.off('delete:card');
+        },
+
+        clearSearch() {
+            this.searchQuery = '';
+        },
+
+        search() {
+            let self = this;
+            let query = this.searchQuery.trim();
+            if (query !== previousSearchQuery) {
+                if (_.isEmpty(query)) {
+                    CardsModel.sort('number').all().then((cards) => {
+                        // console.log(cards);
+                        self.items = cards;
+                    });
+                } else {
+                    if (parseInt(query) > 0) {
+                        CardsModel
+                            .where('number', query)
+                            .first()
+                            .then((card) => {
+                                self.items = [card];
+
+                            });
+                    } else {
+                        CardsModel
+                            .where('number', query)
+                            .orWhere('name', 'like', '%' + query + '%')
+                            .orWhere('address', 'like', '%' + query + '%')
+                            .sort('number')
+                            .all()
+                            .then((cards) => {
+                                self.items = cards;
+                            });
+                    }
+
+                }
+                previousSearchQuery = query;
+                self.$parent.setState('default');
+            }
+        },
+
+        remove() {
+            let buttons = ['Удалить', 'Отмена'];
+            let card = this.items[this.activeIndex];
+            if (card) {
+                dialog.showMessageBox({
+                    type: 'warning',
+                    buttons: buttons,
+                    title: 'Удаление участка',
+                    message: 'Подтвердите удаление участка №' + card.number,
+                    // cancelId: 1,
+                    detail: 'Вы действительно хотите удалить карточку?\nВНИМАНИЕ! Удаление НЕОБРАТИМО! Это ' +
+                    'значит, что вы не сможете посмотреть статистику и историю выдачи этого участка.'
+                }, function (buttonIndex) {
+                    console.log(buttonIndex);
+                });
+            } else {
+                throw new Error('Please select card');
+            }
+        },
+        /**
+         *
+         * @param property
+         */
+        toggleProperty(property) {
+            let card = this.items[this.activeIndex];
+            if (property === 'reset') {
+                card.isDuplicate = false;
+                card.hasIssues = false;
+                card.isLost = false;
+            } else {
+                card[property] = !card[property];
+            }
+        },
+
+        edit() {
+            console.log(this.activeIndex);
+        },
+
+        /**
+         *
+         * @param event
+         * @param index
+         */
+        showCardOnMap(event, index) {
+            event.preventDefault();
+            if (this.activeIndex == index) return;
+            this.activeIndex = index;
+
+            this.$parent.setState('edit');
+
+            EventEmitter.emit('map:show:card', this.items[index]);
+        },
+
+        /**
+         * @param event
+         * @param index
+         */
+        showContextMenu(event, index) {
+            this.activeIndex = index;
+
+            let card = this.items[index];
+
+            //noinspection JSUnresolvedVariable
+            let submenu = menu.items.find((item)=> {
+                return item.selector === 'prop';
+            }).submenu.items;
+
+            submenu[0].checked = !!card.isLost;
+            submenu[1].checked = !!card.hasIssues;
+            submenu[2].checked = !!card.isDuplicate;
+
+
+            event.preventDefault();
+
+            //noinspection JSUnresolvedFunction
+            menu.popup(remote.getCurrentWindow());
+        }
+    }
+};

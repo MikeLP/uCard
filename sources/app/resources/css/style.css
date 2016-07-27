@@ -1,0 +1,24 @@
+html, body {
+    background-color: #fff;
+    font-family: -apple-system, Helvetica Neue, Helvetica, Tahoma, Segoe UI, Arial, sans-serif;
+    height: 100%;
+    overflow: hidden;
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+    /*-webkit-font-smoothing: antialiased;*/
+}
+
+.no-drag {
+    -webkit-app-region: no-drag;
+}
+
+section.page {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    left: 200px;
+}
+
+/*::-webkit-scrollbar-thumb {*/
+    /*height: 100px;*/
+/*}*/

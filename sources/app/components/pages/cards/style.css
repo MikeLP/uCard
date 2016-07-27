@@ -1,0 +1,23 @@
+.card-container {
+    position: absolute;
+    width: auto;
+    left: 250px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    display: flex;
+    /*background-color: grey;*/
+    flex-direction: row-reverse;
+}
+
+@media screen and (max-width: 1280px) {
+    .card-container {
+        flex-direction: column;
+    }
+
+    .map-container {
+        height: 50%;
+        width: 100%;
+    }
+}

@@ -15,7 +15,7 @@
   "scripts": {
     "lint": "node_modules/.bin/eslint ./sources/",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV='production' electron .",
+    "start": "NODE_ENV='development' electron .",
     "start:dev": "NODE_ENV='development' electron .",
     "dist:osx": "build --platform darwin"
   },
@@ -54,17 +54,17 @@
     "knex": "^0.11.9",
     "leaflet": "^1.0.0-rc.2",
     "leaflet-draw": "^0.3.0",
-    "lodash": "^4.14.0",
+    "lodash": "^4.14.1",
     "moment": "^2.14.1",
     "normalize.css": "^4.2.0",
     "sqlite3": "^3.1.4",
     "vue": "^2.0.0-beta.5"
   },
   "devDependencies": {
-    "electron-builder": "^5.17.0",
+    "electron-builder": "^5.19.1",
     "electron-prebuilt": "^1.3.1",
     "electron-rebuild": "^1.1.5",
-    "eslint": "^3.1.1",
+    "eslint": "^3.2.0",
     "eslint-plugin-node": "^2.0.0",
     "node-gyp": "^3.4.0"
   }

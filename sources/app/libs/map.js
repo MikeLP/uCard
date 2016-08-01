@@ -9,6 +9,8 @@ l.canvasOverlay = function (userDrawFunc, options) {
     return new l.CanvasOverlay(userDrawFunc, options);
 };
 
+let cashedArea;
+
 class Map {
     /**
      *
@@ -115,6 +117,15 @@ class Map {
 
     /**
      *
+     * @returns {Map}
+     */
+    refresh() {
+        this.map.invalidateSize();
+        return this;
+    }
+
+    /**
+     *
      * @param zoom
      * @returns {Map}
      */
@@ -129,7 +140,10 @@ class Map {
      * @param area
      */
     drawShape(area) {
+        cashedArea = area;
+
         this.clearLayers();
+
         if (_.isObject(area) && ['polyline', 'polygon'].contains(area.type)) {
             this.layer = l[area.type](area.position, {
                 color: this.options.shape.color || 'red', weight: this.options.shape.weight || 5
@@ -137,6 +151,30 @@ class Map {
         }
 
         return this;
+    }
+
+    addDrawControls() {
+        this.clearLayers();
+        // Initialise the FeatureGroup to store editable layers
+        var drawnItems = new l.FeatureGroup();
+        this.map.addLayer(drawnItems);
+
+        // Initialise the draw control and pass it the FeatureGroup of editable layers
+        var drawControl = new l.Control.Draw({
+            edit: {
+                featureGroup: drawnItems
+            }
+        });
+        // this.map.addControl(drawControl);
+        // this.map.removeControl(drawControl);
+    }
+
+    /**
+     *
+     * @returns {*}
+     */
+    get() {
+        return this.map;
     }
 
 

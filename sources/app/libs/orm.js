@@ -1,4 +1,5 @@
 const path = require('path');
+const assert = require('assert');
 
 //noinspection JSUnresolvedVariable
 const knex = require('knex')({
@@ -13,23 +14,6 @@ const knex = require('knex')({
 });
 
 const _ = require('lodash');
-
-/**
- *
- * @param string
- * @returns {boolean}
- */
-function isJson(string) {
-    if (_.isString(string)) {
-        try {
-            JSON.parse(string);
-        } catch (e) {
-            return false;
-        }
-        return true;
-    }
-    return false;
-}
 
 /**
  *
@@ -51,18 +35,22 @@ class QueryBuilder extends knex.client.QueryBuilder {
         return this['modelClass'];
     }
 
-
     /**
      *
      * @returns {Promise}
      */
     first() {
-        let self = this;
-        return new Promise(function (resolve, reject) {
-            self.then(function (result) {
-                resolve(new QueryBuilder.model(result.first()));
-            })
-                .catch(function (error) {
+        return new Promise((resolve, reject) => {
+            this
+                .then(result => {
+                    result = result.first();
+                    if (result) {
+                        resolve(new QueryBuilder.model(result));
+                    } else {
+                        resolve(null);
+                    }
+                })
+                .catch(error => {
                     reject(error);
                 });
         });
@@ -73,15 +61,14 @@ class QueryBuilder extends knex.client.QueryBuilder {
      * @returns {Promise}
      */
     all() {
-        let self = this;
-        return new Promise(function (resolve, reject) {
-            //noinspection JSUnresolvedFunction
-            self.then(function (result) {
-                resolve(result.map((item) => {
-                    return new QueryBuilder.model(item);
-                }));
-            })
-                .catch(function (error) {
+        return new Promise((resolve, reject) => {
+            this
+                .then(result => {
+                    resolve(result.map(item => {
+                        return new QueryBuilder.model(item);
+                    }));
+                })
+                .catch(error => {
                     reject(error);
                 });
         });
@@ -115,16 +102,30 @@ class QueryBuilder extends knex.client.QueryBuilder {
 knex.client['QueryBuilder'] = QueryBuilder;
 
 class Model {
-    /**
-     *
-     * @param properties
-     */
-    constructor(properties) {
-        for (let property in properties) {
-            if (properties.hasOwnProperty(property)) {
-                this[property] = isJson(properties[property]) ? JSON.parse(properties[property]) : properties[property];
-            }
-        }
+    static get primaryKey() {
+        return 'id';
+    }
+
+    static get foreignKey() {
+        return null;
+    }
+
+    static hasManyThrough(model, throughModel, foreignKey) {
+        assert.deepEqual(model.prototype, Model);
+        assert.deepEqual(throughModel.prototype, Model);
+        assert(foreignKey);
+
+        return model.select().leftJoin(
+            throughModel.table,
+            model.table + '.' + model.primaryKey,
+            throughModel.table + '.' + foreignKey
+        )
+    }
+
+    static hasMany(model) {
+    }
+
+    static hasOne(model) {
     }
 
     /**
@@ -132,12 +133,24 @@ class Model {
      * @returns {QueryBuilder}
      */
     static where() {
-        let self = this;
         QueryBuilder.model = this;
+        //noinspection JSUnresolvedFunction
         return knex
             .select()
-            .from(self.table)
+            .from(this.table)
             .where(...arguments);
+    }
+
+    /**
+     *
+     * @returns {QueryBuilder}
+     */
+    static select() {
+        QueryBuilder.model = this;
+        //noinspection JSUnresolvedFunction
+        return knex
+            .select(...arguments)
+            .from(this.table);
     }
 
     /**
@@ -147,22 +160,22 @@ class Model {
      */
     static find(id) {
         let primaryKey = this.primaryKey ? this.primaryKey : 'id';
-        let self = this;
         QueryBuilder.model = this;
+        //noinspection JSUnresolvedFunction
         return knex
             .select()
-            .from(self.table)
+            .from(this.table)
             .where(primaryKey, parseInt(id))
             .limit(1)
             .first();
     }
 
     static sort() {
-        let self = this;
         QueryBuilder.model = this;
+        //noinspection JSUnresolvedFunction
         return knex
             .select()
-            .from(self.table)
+            .from(this.table)
             .orderBy(...arguments);
     }
 
@@ -171,16 +184,53 @@ class Model {
      * @returns {Promise}
      */
     static all() {
-        let self = this;
         QueryBuilder.model = this;
         //noinspection JSUnresolvedFunction
         return knex
             .select()
-            .from(self.table)
+            .from(this.table)
             .all();
     }
-}
-// const bookshelf = require('bookshelf')(knex);
 
-// module.exports = bookshelf.Model;
+    /**
+     *
+     * @param properties
+     */
+    constructor(properties) {
+        if (_.isFunction(this.parseJSON)) {
+            //noinspection JSUnresolvedFunction
+            this.parseJSON(properties)
+        } else {
+            if (_.isArray(Model.properties)) {
+                for (let property in properties) {
+                    if (properties.hasOwnProperty(property) && Model.properties.contains(property)) {
+                        this[property] = properties[property];
+                    }
+                }
+            } else {
+                for (let property in properties) {
+                    if (properties.hasOwnProperty(property)) {
+                        this[property] = properties[property];
+                    }
+                }
+            }
+        }
+
+    }
+
+    /**
+     *
+     */
+    toJSON() {
+        return JSON.stringify(Object.assign({}, this));
+    }
+
+    /**
+     *
+     */
+    toObject() {
+        return JSON.parse(this.toJSON());
+    }
+}
+
 module.exports = Model;

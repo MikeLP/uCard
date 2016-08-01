@@ -1,87 +1,55 @@
 'use strict';
 
 const component = require(global.ROOT_DIR + '/libs/component');
+const controls = require('./controls');
 
 module.exports = {
     data: () => {
         return {
+            card: null,
+            proclaimers: [],
             panel: {
                 currentState: 'default',
-                items: [
-                    {
-                        title: 'Создать новую карточку участка',
-                        class: {
-                            'icon ion ion-ios-add-circle-outline': true,
-                            'disabled': false
-                        }
-                    },
-                    {
-                        title: 'Сохранить изменения',
-                        class: {
-                            'icon ion ion-ios-checkmark-circle-outline': true,
-                            'disabled': true
-                        }
-                    },
-                    {
-                        title: 'Редактировать карточку участка',
-                        class: {
-                            'icon ion ion-ios-create-outline': true,
-                            'disabled': true
-                        }
-                    },
-                    {
-                        title: 'Изменить положение участка на карте',
-                        class: {
-                            'icon ion ion-ios-map-outline': true,
-                            'disabled': true
-                        }
-                    },
-                    {
-                        title: 'Архивировать',
-                        class: {
-                            'icon ion-ios-archive-outline': true,
-                            'disabled': true
-                        }
-                    },
-                    {
-                        title: 'Печатать',
-                        class: {
-                            'icon ion ion-ios-print-outline': true,
-                            'disabled': true
-                        }
-                    },
-                    {
-                        title: 'Найти карточку на карте',
-                        event: 'map:show:card',
-                        class: {
-                            'icon ion ion-ios-locate-outline': true,
-                            'disabled': true
-                        }
-                    },
-                    {
-                        title: 'Удалить карточку участка',
-                        event: 'delete:card',
-                        class: {
-                            'icon ion ion-ios-trash-outline': true,
-                            'disabled': true
-                        }
-                    },
-                ]
+                items: controls
             }
         };
     },
     methods: {
         /**
-         *
          * @param state
          */
-        setState(state) {
-            if (state === this.panel.currentState || !(['edit', 'default'].contains(state))) return;
-            let self = this;
-            self.panel.currentState = state;
-            self.panel.items.forEach((value, index) => {
-                self.panel.items[index].class.disabled = !value.class.disabled;
-            });
+        setPanelState(state) {
+            switch (state) {
+                case state === this.panel.currentState:
+                    return;
+                case 'before:edit':
+                    this.panel.items = this.panel.items.map((value) => {
+                        value.class.disabled = !!['save', 'create'].contains(value.name);
+                        return value;
+                    });
+                    break;
+                case 'edit':
+                    this.panel.items = this.panel.items.map((value) => {
+                        value.class.disabled = value.name === 'create';
+                        return value;
+                    });
+                    break;
+                case 'disabled':
+                    this.panel.items = this.panel.items.map((value) => {
+                        value.class.disabled = true;
+                        return value;
+                    });
+                    break;
+                case 'default':
+                    this.panel.items = this.panel.items.map((value) => {
+                        value.class.disabled = !(value.name === 'create');
+                        return value;
+                    });
+                    break;
+            }
+
+            this.panel.currentState = state;
+
         }
     },
     components: {

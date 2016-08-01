@@ -10,50 +10,27 @@ const {remote} = require('electron');
 const {Menu, MenuItem, dialog} = remote;
 
 const menu = new Menu;
-
 const streets = require('./streets');
 
 
-let previousSearchQuery = '';
+let previousSearchQuery = String();
 
 module.exports = {
     created() {
         this.destroy();
-
-        let self = this;
-
+        // List for auto-complete hardcoded
         //noinspection JSUnresolvedVariable
         this.streets = streets.Ukraine.Odessa;
 
-        self.$parent.setState('default');
+        // Disallow edit card
+        this.$parent.setPanelState('default');
 
         EventEmitter.on('delete:card', this.remove.bind(this));
+        EventEmitter.on('edit:map', this.editMap.bind(this));
 
-        CardsModel.sort('number').all().then((cards) => {
-            // console.log(cards);
-            self.items = cards;
-        });
+        CardsModel.sort('number').all().then(this.updateList);
 
-        MenuElements.edit.click = this.edit;
-        MenuElements.remove.click = this.remove;
-
-        menu.append(new MenuItem(MenuElements.edit), 'Edit');
-        menu.append(new MenuItem(MenuElements.save), 'Save');
-        menu.append(new MenuItem(MenuElements.separator), 'separator');
-
-        // Add click callback to submenu items
-        MenuElements.properties.submenu.forEach((item, key)=> {
-            if (['isDuplicate', 'hasIssues', 'isLost', 'reset'].contains(item.value)) {
-                item.click = self.toggleProperty.bind(self, item.value);
-                MenuElements.properties.submenu[key] = item;
-            }
-        });
-
-        menu.append(new MenuItem(MenuElements.properties), 'Properties');
-        menu.append(new MenuItem(MenuElements.separator), 'separator');
-        menu.append(new MenuItem(MenuElements.archive), 'Archive');
-        menu.append(new MenuItem(MenuElements.separator), 'separator');
-        menu.append(new MenuItem(MenuElements.remove), 'Удалить');
+        this.prepareMenu();
     },
 
     beforeDestroy() {
@@ -69,34 +46,75 @@ module.exports = {
         };
     },
     methods: {
+        prepareMenu() {
+            MenuElements.edit.click = this.edit;
+            MenuElements.remove.click = this.remove;
+
+            menu.append(new MenuItem(MenuElements.edit), 'Edit');
+            menu.append(new MenuItem(MenuElements.save), 'Save');
+            menu.append(new MenuItem(MenuElements.separator), 'separator');
+
+            // Add click callback to submenu items
+            MenuElements.properties.submenu.forEach((item, key) => {
+                if (['isDuplicate', 'hasIssues', 'isLost', 'reset'].contains(item.value)) {
+                    item.click = this.toggleProperty.bind(self, item.value);
+                    MenuElements.properties.submenu[key] = item;
+                }
+            });
+
+            menu.append(new MenuItem(MenuElements.properties), 'Properties');
+            menu.append(new MenuItem(MenuElements.separator), 'separator');
+            menu.append(new MenuItem(MenuElements.archive), 'Archive');
+            menu.append(new MenuItem(MenuElements.separator), 'separator');
+            menu.append(new MenuItem(MenuElements.remove), 'Удалить');
+        },
+
+        /**
+         *
+         * @param items
+         */
+        updateList(items) {
+            if (_.isArray(items)) {
+                this.items = items;
+            } else if (items instanceof CardsModel) {
+                this.items = [items];
+            } else {
+                this.items = [];
+            }
+        },
+
+        /**
+         *
+         */
         destroy() {
             menu.clear();
             menu.removeAllListeners();
             EventEmitter.off('delete:card');
+            EventEmitter.off('edit:map');
         },
 
+        /**
+         *
+         */
         clearSearch() {
             this.searchQuery = '';
         },
 
+        /**
+         *
+         */
         search() {
             let self = this;
             let query = this.searchQuery.trim();
             if (query !== previousSearchQuery) {
                 if (_.isEmpty(query)) {
-                    CardsModel.sort('number').all().then((cards) => {
-                        // console.log(cards);
-                        self.items = cards;
-                    });
+                    CardsModel.sort('number').all().then(this.updateList);
                 } else {
                     if (parseInt(query) > 0) {
                         CardsModel
                             .where('number', query)
                             .first()
-                            .then((card) => {
-                                self.items = [card];
-
-                            });
+                            .then(this.updateList);
                     } else {
                         CardsModel
                             .where('number', query)
@@ -104,21 +122,21 @@ module.exports = {
                             .orWhere('address', 'like', '%' + query + '%')
                             .sort('number')
                             .all()
-                            .then((cards) => {
-                                self.items = cards;
-                            });
+                            .then(this.updateList);
                     }
 
                 }
                 previousSearchQuery = query;
-                self.$parent.setState('default');
+                self.$parent.setPanelState('default');
             }
         },
 
         remove() {
             let buttons = ['Удалить', 'Отмена'];
             let card = this.items[this.activeIndex];
-            if (card) {
+
+            if (_.isObject(card)) {
+                //noinspection JSUnresolvedFunction
                 dialog.showMessageBox({
                     type: 'warning',
                     buttons: buttons,
@@ -153,19 +171,27 @@ module.exports = {
             console.log(this.activeIndex);
         },
 
+        editMap() {
+            console.log('Edit MAp');
+        },
+
         /**
          *
          * @param event
          * @param index
          */
-        showCardOnMap(event, index) {
+        select(event, index) {
             event.preventDefault();
             if (this.activeIndex == index) return;
             this.activeIndex = index;
+            let card = this.items[index];
+            card.proclaimers.then(proclaimers => {
+                this.$parent.proclaimers = proclaimers;
+            });
+            this.$parent.card = card;
+            this.$parent.setPanelState('before:edit');
 
-            this.$parent.setState('edit');
-
-            EventEmitter.emit('map:show:card', this.items[index]);
+            EventEmitter.emit('map:show:card', card);
         },
 
         /**
@@ -174,7 +200,6 @@ module.exports = {
          */
         showContextMenu(event, index) {
             this.activeIndex = index;
-
             let card = this.items[index];
 
             //noinspection JSUnresolvedVariable

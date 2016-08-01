@@ -16,7 +16,7 @@
         <!--</datalist>-->
     </div>
     <div id="card-list" class="cards-list">
-        <div v-for="(item, index) of items" v-on:click="showCardOnMap($event, index)"
+        <div v-for="(item, index) of items" v-on:click="select($event, index)"
              v-on:contextmenu="showContextMenu($event, index)"
              v-bind:class="['item', activeIndex === index ? 'active': '']">
             <span class="label">УЧАСТОК {{item.number}}</span>

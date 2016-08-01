@@ -1,28 +1,30 @@
 .map-container {
     position: relative;
-    /*height: 100%;*/
-    /*top: 0;*/
-    /*bottom: 0;*/
-    /*right: 0;*/
-    width: 60%;
+    width: 100%;
     min-width: 400px;
     overflow: hidden;
     height: 100%;
+    transition: height 100ms ease-in-out;
 }
 
-.map {
+.active-card .map-container {
+    width: 60%;
+    height: auto;
+}
+
+.map-container .map {
     position: relative;
     height: 100%;
     width: 100%;
     overflow: hidden;
 }
 
-.map .leaflet-bar {
+.map-container .map .leaflet-bar {
     border-radius: 0;
     box-shadow: none;
 }
 
-.map .leaflet-bar a, .leaflet-bar a:hover {
+.map .leaflet-bar a, .map .leaflet-bar a:hover {
     background-color: #31415D;
     border-bottom-color: rgba(255, 255, 255, 0.07);
     color: #fff;
@@ -33,4 +35,8 @@
 
 .map .leaflet-control-attribution a {
     display: none;
+}
+
+.map .leaflet-draw-toolbar-top a {
+    background-color: #fff !important;
 }

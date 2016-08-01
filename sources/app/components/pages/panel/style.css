@@ -2,10 +2,12 @@
     height: 45px;
     width: 100%;
     border-bottom: 1px solid #f1f1f1;
+    box-sizing: border-box;
 }
 
 .control-panel-container .panel {
     height: 100%;
+    background-color: #fdfdfd;
     display: flex;
     flex-direction: row;
     align-items: center;

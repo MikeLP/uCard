@@ -1,13 +1,6 @@
-if (!Array.prototype.contains) {
-    /**
-     *
-     * @param value
-     * @returns {boolean}
-     */
-    Array.prototype.contains = function (value) {
-        return this.indexOf(value) !== -1;
-    };
-}
+/**
+ *
+ */
 
 if (!Array.prototype.first) {
     /**
@@ -28,6 +21,9 @@ if (!Array.prototype.last) {
         return (this[this.length - 1]);
     };
 }
+
+// Symlink
+Array.prototype.contains = Array.prototype.includes;
 
 if (!String.prototype.capitalizeFirst) {
     /**

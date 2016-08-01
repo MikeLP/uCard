@@ -102,14 +102,29 @@ class QueryBuilder extends knex.client.QueryBuilder {
 knex.client['QueryBuilder'] = QueryBuilder;
 
 class Model {
+    /**
+     *
+     * @returns {string}
+     */
     static get primaryKey() {
         return 'id';
     }
 
+    /**
+     *
+     * @returns {null}
+     */
     static get foreignKey() {
         return null;
     }
 
+    /**
+     *
+     * @param model
+     * @param throughModel
+     * @param foreignKey
+     * @returns {*}
+     */
     static hasManyThrough(model, throughModel, foreignKey) {
         assert.deepEqual(model.prototype, Model);
         assert.deepEqual(throughModel.prototype, Model);
@@ -119,12 +134,20 @@ class Model {
             throughModel.table,
             model.table + '.' + model.primaryKey,
             throughModel.table + '.' + foreignKey
-        )
+        );
     }
 
+    /**
+     *
+     * @param model
+     */
     static hasMany(model) {
     }
 
+    /**
+     *
+     * @param model
+     */
     static hasOne(model) {
     }
 

@@ -7,11 +7,11 @@ const _ = require('lodash');
 /**
  *
  * @param name
- * @returns {VueStatic}
+ * @returns {Function|*}
  */
 module.exports = (name) => {
     if (_.isString(name)) {
-        let component = require('../components/' + name + '/main.js');
+        let component = require('../components/' + name);
 
         let style = global.window.document.createElement('link');
         style.setAttribute('href', 'components/' + name + '/style.css');

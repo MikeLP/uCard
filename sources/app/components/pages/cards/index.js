@@ -21,7 +21,7 @@ module.exports = {
         setPanelState(state) {
             switch (state) {
                 case state === this.panel.currentState:
-                    return;
+                    break;
                 case 'before:edit':
                     this.panel.items = this.panel.items.map((value) => {
                         value.class.disabled = !!['save', 'create'].contains(value.name);

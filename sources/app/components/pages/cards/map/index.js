@@ -70,7 +70,7 @@ module.exports = {
                     isRefreshed = true;
                     setTimeout(()=> {
                         map.refresh();
-                    }, 150)
+                    }, 150);
                 }
                 map
                     .panAndZoom(currentCard.map, zoom)

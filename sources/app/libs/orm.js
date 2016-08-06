@@ -141,15 +141,13 @@ class Model {
      *
      * @param model
      */
-    static hasMany(model) {
-    }
+    // static hasMany(model) {}
 
     /**
      *
      * @param model
      */
-    static hasOne(model) {
-    }
+    // static hasOne(model) {}
 
     /**
      *
@@ -222,7 +220,7 @@ class Model {
     constructor(properties) {
         if (_.isFunction(this.parseJSON)) {
             //noinspection JSUnresolvedFunction
-            this.parseJSON(properties)
+            this.parseJSON(properties);
         } else {
             if (_.isArray(Model.properties)) {
                 for (let property in properties) {

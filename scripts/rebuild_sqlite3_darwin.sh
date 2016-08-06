@@ -6,7 +6,7 @@ if [ -d "./node_modules/sqlite3" ]; then
 fi
 
 # Original
-# npm i --S sqlite3 --build-from-source --runtime=electron  --dist-url=https://atom.io/download/atom-shell --target_arch=x64 --target="1.3.1"
+# npm i --S sqlite3 --build-from-source --runtime=electron  --dist-url=https://atom.io/download/atom-shell --target_arch=x64 --target="1.3.2"
 
 # with ICU
 npm i --S sqlite3 \
@@ -14,5 +14,5 @@ npm i --S sqlite3 \
     --runtime=electron \
     --dist-url=https://atom.io/download/atom-shell \
     --target_arch=x64 \
-    --target="1.3.1" \
+    --target="1.3.2" \
     --sqlite=/usr/local/bin/sqlite3

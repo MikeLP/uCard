@@ -18,7 +18,7 @@ class Storage {
      * @returns {null}
      */
     get(key) {
-        return this._storage.hasOwnProperty(key) ? this._storage[key] : null
+        return this._storage.hasOwnProperty(key) ? this._storage[key] : null;
     }
 
     /**

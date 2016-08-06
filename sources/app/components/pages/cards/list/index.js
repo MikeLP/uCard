@@ -57,7 +57,7 @@ module.exports = {
             // Add click callback to submenu items
             MenuElements.properties.submenu.forEach((item, key) => {
                 if (['isDuplicate', 'hasIssues', 'isLost', 'reset'].contains(item.value)) {
-                    item.click = this.toggleProperty.bind(self, item.value);
+                    item.click = this.toggleProperty.bind(this, item.value);
                     MenuElements.properties.submenu[key] = item;
                 }
             });

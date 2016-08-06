@@ -5,12 +5,6 @@ let l = require('leaflet'),
     _ = require('lodash');
 require('leaflet-draw');
 
-l.canvasOverlay = function (userDrawFunc, options) {
-    return new l.CanvasOverlay(userDrawFunc, options);
-};
-
-let cashedArea;
-
 class Map {
     /**
      *
@@ -54,9 +48,9 @@ class Map {
             'wmflabs': 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
 
             'mapbox': 'https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=' +
-            'pk.eyJ1IjoiaXlhbmVsbG8iLCJhIjoiY2lxcXdpNnRiMDA3aGh3bmtpNjJpNzc0dSJ9.gET5ffIsRbfiC-xnWH0C2g',
+                'pk.eyJ1IjoiaXlhbmVsbG8iLCJhIjoiY2lxcXdpNnRiMDA3aGh3bmtpNjJpNzc0dSJ9.gET5ffIsRbfiC-xnWH0C2g',
             'mapbox-light': 'https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=' +
-            'pk.eyJ1IjoiaXlhbmVsbG8iLCJhIjoiY2lxcXdpNnRiMDA3aGh3bmtpNjJpNzc0dSJ9.gET5ffIsRbfiC-xnWH0C2g',
+                'pk.eyJ1IjoiaXlhbmVsbG8iLCJhIjoiY2lxcXdpNnRiMDA3aGh3bmtpNjJpNzc0dSJ9.gET5ffIsRbfiC-xnWH0C2g',
 
             /* 2gis try random tile like tile% */
             '2gisRu': 'http://tile{s}.maps.2gis.ru/tiles?x={x}&y={y}&z={z}&v=1112' + this.options.retina,
@@ -71,7 +65,9 @@ class Map {
      * @returns {Map}
      */
     panAndZoom(position, zoom) {
-        this.map.setView(position, zoom, {animate: true});
+        this.map.setView(position, zoom, {
+            animate: true
+        });
         return this;
     }
 
@@ -85,7 +81,7 @@ class Map {
         if (points)
             this.map.panTo(points);
         else
-            throw('Can`t pan. Please set points');
+            throw ('Can`t pan. Please set points');
         return this;
     }
 
@@ -140,13 +136,12 @@ class Map {
      * @param area
      */
     drawShape(area) {
-        cashedArea = area;
-
         this.clearLayers();
 
         if (_.isObject(area) && ['polyline', 'polygon'].contains(area.type)) {
             this.layer = l[area.type](area.position, {
-                color: this.options.shape.color || 'red', weight: this.options.shape.weight || 5
+                color: this.options.shape.color || 'red',
+                weight: this.options.shape.weight || 5
             }).addTo(this.map);
         }
 
@@ -156,15 +151,16 @@ class Map {
     addDrawControls() {
         this.clearLayers();
         // Initialise the FeatureGroup to store editable layers
-        var drawnItems = new l.FeatureGroup();
+        let drawnItems = new l.FeatureGroup();
         this.map.addLayer(drawnItems);
 
         // Initialise the draw control and pass it the FeatureGroup of editable layers
-        var drawControl = new l.Control.Draw({
+        new l.Control.Draw({
             edit: {
                 featureGroup: drawnItems
             }
         });
+        return this;
         // this.map.addControl(drawControl);
         // this.map.removeControl(drawControl);
     }

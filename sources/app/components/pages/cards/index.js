@@ -54,6 +54,7 @@ module.exports = {
     },
     components: {
         'map-area': component('pages/cards/map'),
-        list: component('pages/cards/list')
+        list: component('pages/cards/list'),
+        proclaimers: component('pages/cards/proclaimers')
     }
 };

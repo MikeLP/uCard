@@ -1,0 +1,11 @@
+.card-container .proclaimers {
+    flex-basis: 40%;
+    overflow-y: scroll;
+    border-top: 1px solid #f1f1f1;
+}
+
+.card-container .proclaimers .proclaimer {
+    cursor: pointer;
+    padding: 5px 8px;
+    border-bottom: 1px solid #f1f1f1;
+}

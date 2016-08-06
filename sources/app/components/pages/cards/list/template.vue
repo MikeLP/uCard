@@ -11,9 +11,6 @@
                autocomplete="on"
         />
         <span v-on:click="clearSearch" class="icon ion ion-ios-backspace-outline"></span>
-        <!--<datalist id="street_list">-->
-            <!--<option v-for="street of streets" v-bind:value="street">-->
-        <!--</datalist>-->
     </div>
     <div id="card-list" class="cards-list">
         <div v-for="(item, index) of items" v-on:click="select($event, index)"

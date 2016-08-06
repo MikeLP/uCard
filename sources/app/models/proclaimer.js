@@ -6,6 +6,10 @@ class ProclaimerModel extends Model {
         return 'proclaimers';
     }
 
+    get fullName() {
+        return this.name + ' ' + this.surname;
+    }
+
     get cards() {
 
     }

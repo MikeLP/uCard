@@ -23,7 +23,7 @@
     "appId": "hr.creaticon.eatodo",
     "app-category-type": "public.app-category.productivity",
     "asar": {
-      "unpack": "**/database/*"
+      "unpack": "**/data/*"
     },
     "mac": {
       "icon": "./sources/app/resources/icons/app/buildings.icns"

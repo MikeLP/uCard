@@ -1,19 +1,18 @@
 const path = require('path');
 const assert = require('assert');
+const _ = require('lodash');
+
+const dbName = 'db.sqlite';
+const dbPath = process.env.NODE_ENV === 'development' ? global.ROOT_DIR + '/../../' : process.resourcesPath + '/app.asar.unpacked/';
 
 //noinspection JSUnresolvedVariable
 const knex = require('knex')({
     client: 'sqlite3',
     connection: {
-        filename: path.resolve(
-            process.env.NODE_ENV === 'development' ?
-            global.ROOT_DIR + '/../../' : process.resourcesPath + '/app.asar.unpacked/',
-            'sources/database/db.sqlite3')
+        filename: path.resolve(dbPath, 'sources/data/database/' + dbName)
     },
     useNullAsDefault: true
 });
-
-const _ = require('lodash');
 
 /**
  *

@@ -1,6 +1,6 @@
 {
   "name": "uCard",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "uCard - application of cards management",
   "homepage": "http://google.com",
   "main": "sources/app/init.js",

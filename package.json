@@ -1,6 +1,6 @@
 {
   "name": "uCard",
-  "version": "0.0.0",
+  "version": "0.1.0-0",
   "description": "uCard - application of cards management",
   "homepage": "http://google.com",
   "main": "sources/app/init.js",
@@ -30,10 +30,12 @@
     },
     "win": {}
   },
-  "contributors": [{
-    "name": "Yan Zhabin",
-    "email": "iyanello@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "Yan Zhabin",
+      "email": "iyanello@gmail.com"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/MikeLP/uCard/issues",
     "email": "iyanello@gmail.com"

@@ -22,16 +22,17 @@ class QueryBuilder extends knex.client.QueryBuilder {
      *
      * @param model
      */
-    static set model(model) {
-        this['modelClass'] = model;
+    static set _models(models) {
+        let currentModel = this._models || {};
+        this['models'] = Object.assign(currentModel, models);
     }
 
     /**
      *
-     * @returns {*}
+     * @return {*}
      */
-    static get model() {
-        return this['modelClass'];
+    static get _models() {
+        return this['models'];
     }
 
     /**
@@ -39,12 +40,18 @@ class QueryBuilder extends knex.client.QueryBuilder {
      * @returns {Promise}
      */
     first() {
+        let models = QueryBuilder._models;
         return new Promise((resolve, reject) => {
             this
                 .then(result => {
                     result = result.first();
                     if (result) {
-                        resolve(new QueryBuilder.model(result));
+                        let object = new models.primary(result);
+                        if (models.secondary) {
+                            object[models.secondary.name.replace('Model', '')] =
+                                new models.secondary(result);
+                        }
+                        resolve(object);
                     } else {
                         resolve(null);
                     }
@@ -60,11 +67,17 @@ class QueryBuilder extends knex.client.QueryBuilder {
      * @returns {Promise}
      */
     all() {
+        let models = QueryBuilder._models;
         return new Promise((resolve, reject) => {
             this
                 .then(result => {
-                    resolve(result.map(item => {
-                        return new QueryBuilder.model(item);
+                    resolve(result.map(result => {
+                        let object = new models.primary(result);
+                        if (models.secondary) {
+                            object[models.secondary.name.replace('Model', '')] =
+                                new models.secondary(result);
+                        }
+                        return object;
                     }));
                 })
                 .catch(error => {
@@ -117,6 +130,10 @@ class Model {
         return null;
     }
 
+    static get name() {
+        return this.constructor.name;
+    }
+
     /**
      *
      * @param model
@@ -127,7 +144,13 @@ class Model {
     static hasManyThrough(model, throughModel, foreignKey) {
         assert.deepEqual(model.prototype, Model);
         assert.deepEqual(throughModel.prototype, Model);
+
         assert(foreignKey);
+
+        QueryBuilder._models = {
+            primary: model,
+            secondary: throughModel
+        };
 
         return model.select().leftJoin(
             throughModel.table,
@@ -153,7 +176,9 @@ class Model {
      * @returns {QueryBuilder}
      */
     static where() {
-        QueryBuilder.model = this;
+        QueryBuilder._models = {
+            primary: this
+        };
         //noinspection JSUnresolvedFunction
         return knex
             .select()
@@ -166,7 +191,9 @@ class Model {
      * @returns {QueryBuilder}
      */
     static select() {
-        QueryBuilder.model = this;
+        QueryBuilder._models = {
+            primary: this
+        };
         //noinspection JSUnresolvedFunction
         return knex
             .select(...arguments)
@@ -180,7 +207,9 @@ class Model {
      */
     static find(id) {
         let primaryKey = this.primaryKey ? this.primaryKey : 'id';
-        QueryBuilder.model = this;
+        QueryBuilder._models = {
+            primary: this
+        };
         //noinspection JSUnresolvedFunction
         return knex
             .select()
@@ -191,7 +220,9 @@ class Model {
     }
 
     static sort() {
-        QueryBuilder.model = this;
+        QueryBuilder._models = {
+            primary: this
+        };
         //noinspection JSUnresolvedFunction
         return knex
             .select()
@@ -204,7 +235,9 @@ class Model {
      * @returns {Promise}
      */
     static all() {
-        QueryBuilder.model = this;
+        QueryBuilder._models = {
+            primary: this
+        };
         //noinspection JSUnresolvedFunction
         return knex
             .select()
@@ -221,12 +254,10 @@ class Model {
             //noinspection JSUnresolvedFunction
             this.parseJSON(properties);
         } else {
-            if (_.isArray(Model.properties)) {
-                for (let property in properties) {
-                    if (properties.hasOwnProperty(property) && Model.properties.contains(property)) {
-                        this[property] = properties[property];
-                    }
-                }
+            if (_.isArray(this.constructor.properties)) {
+                this.constructor.properties.forEach(property => {
+                    this[property] = properties[property];
+                });
             } else {
                 for (let property in properties) {
                     if (properties.hasOwnProperty(property)) {

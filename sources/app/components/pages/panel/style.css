@@ -19,6 +19,7 @@
 .control-panel-container .panel .icon {
     font-size: 30px;
     cursor: pointer;
+    color: #383838;
 }
 
 .control-panel-container .panel .icon.disabled {

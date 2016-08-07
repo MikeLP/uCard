@@ -7,7 +7,8 @@ const _ = require('lodash');
 
 //noinspection NpmUsedModulesInstalled
 const {remote} = require('electron');
-const {Menu, MenuItem, dialog} = remote;
+
+const {Menu,MenuItem,dialog} = remote;
 
 const menu = new Menu;
 const streets = require('./streets');
@@ -144,7 +145,7 @@ module.exports = {
                     message: 'Подтвердите удаление участка №' + card.number,
                     // cancelId: 1,
                     detail: 'Вы действительно хотите удалить карточку?\nВНИМАНИЕ! Удаление НЕОБРАТИМО! Это ' +
-                    'значит, что вы не сможете посмотреть статистику и историю выдачи этого участка.'
+                        'значит, что вы не сможете посмотреть статистику и историю выдачи этого участка.'
                 }, function (buttonIndex) {
                     console.log(buttonIndex);
                 });
@@ -185,7 +186,7 @@ module.exports = {
             if (this.activeIndex == index) return;
             this.activeIndex = index;
             let card = this.items[index];
-            card.proclaimers.then(proclaimers => {
+            card.proclaimers.take(50).all().then(proclaimers => {
                 this.$parent.proclaimers = proclaimers;
             });
             this.$parent.card = card;
@@ -203,7 +204,7 @@ module.exports = {
             let card = this.items[index];
 
             //noinspection JSUnresolvedVariable
-            let submenu = menu.items.find((item)=> {
+            let submenu = menu.items.find((item) => {
                 return item.selector === 'prop';
             }).submenu.items;
 

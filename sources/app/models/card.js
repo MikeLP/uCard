@@ -29,8 +29,7 @@ class CardModel extends Model {
                 ProclaimerCardModel.table + '.' + 'cardNumber',
                 this.number
             )
-            .sort('beginDate')
-            .all();
+            .sort('beginDate');
     }
 
     /**

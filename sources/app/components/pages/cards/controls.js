@@ -11,7 +11,7 @@ module.exports = [
         title: 'Сохранить изменения',
         name: 'save',
         class: {
-            'icon ion ion-ios-checkmark-circle-outline': true,
+            'icon ion ion-ios-checkmark-circle': true,
             'disabled': true
         }
     },
@@ -19,7 +19,7 @@ module.exports = [
         title: 'Редактировать карточку участка',
         name: 'edit',
         class: {
-            'icon ion ion-ios-create-outline': true,
+            'icon ion ion-ios-create': true,
             'disabled': true
         }
     },
@@ -28,7 +28,7 @@ module.exports = [
         name: 'map',
         event: 'edit:map',
         class: {
-            'icon ion ion-ios-map-outline': true,
+            'icon ion ion-ios-map': true,
             'disabled': true,
         }
     },
@@ -36,7 +36,7 @@ module.exports = [
         title: 'Архивировать',
         name: 'archive',
         class: {
-            'icon ion-ios-archive-outline': true,
+            'icon ion-ios-archive': true,
             'disabled': true
         }
     },
@@ -44,7 +44,7 @@ module.exports = [
         title: 'Печатать',
         name: 'print',
         class: {
-            'icon ion ion-ios-print-outline': true,
+            'icon ion ion-ios-print': true,
             'disabled': true
         }
     },
@@ -53,7 +53,7 @@ module.exports = [
         name: 'locate',
         event: 'map:show:card',
         class: {
-            'icon ion ion-ios-locate-outline': true,
+            'icon ion ion-ios-locate': true,
             'disabled': true
         }
     },
@@ -62,7 +62,7 @@ module.exports = [
         name: 'delete',
         event: 'delete:card',
         class: {
-            'icon ion ion-ios-trash-outline': true,
+            'icon ion ion-ios-trash': true,
             'disabled': true
         }
     },

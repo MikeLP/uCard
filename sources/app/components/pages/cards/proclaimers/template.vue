@@ -1,4 +1,5 @@
 <div class="proclaimers">
+  <div v-if="items.length > 0" class="list">
     <div v-for="(item, index) of items" class="proclaimer">
         <div class="fullname">
           <span>{{item.fullName}}</span>
@@ -25,4 +26,8 @@
     <div title="Показать всю историю карточки" class="more">
       <div class="icon ion-ios-more-outline"></div>
     </div>
+  </div>
+  <div v-else class="empty">
+      Участок<br/> не обработан
+  </div>
 </div>

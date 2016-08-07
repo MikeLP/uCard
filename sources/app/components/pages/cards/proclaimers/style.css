@@ -1,4 +1,5 @@
 .card-container .proclaimers {
+    position: relative;
     flex-basis: 40%;
     overflow-y: scroll;
     border-top: 1px solid #f1f1f1;
@@ -6,6 +7,26 @@
     padding-bottom: 10px;
     box-sizing: border-box;
     min-width: 350px;
+}
+
+.card-container .proclaimers .list {
+    height: 100%;
+    width: 100%;
+}
+
+.card-container .proclaimers .empty {
+    box-sizing: border-box;
+    padding: 50px;
+    font-weight: lighter;
+    -webkit-font-smoothing: antialiased;
+    font-size: 50px;
+    text-align: center;
+    height: 80%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    overflow: hidden;
 }
 
 .card-container .proclaimers .proclaimer {

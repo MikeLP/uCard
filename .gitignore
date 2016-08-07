@@ -1,6 +1,6 @@
 dist/
 node_modules/
 .DS_Store
-sources/data/
+sources/data/*
 .idea/
 *.log

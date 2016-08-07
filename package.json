@@ -30,10 +30,12 @@
     },
     "win": {}
   },
-  "contributors": [{
-    "name": "Yan Zhabin",
-    "email": "iyanello@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "Yan Zhabin",
+      "email": "iyanello@gmail.com"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/MikeLP/uCard/issues",
     "email": "iyanello@gmail.com"

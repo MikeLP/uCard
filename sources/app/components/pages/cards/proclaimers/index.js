@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = {
-    props: ['items'],
-    data: () => {
-        return {};
-    },
-    methods: {}
+  props: ['items'],
+  data: () => {
+    return {};
+  },
+  methods: {}
 };

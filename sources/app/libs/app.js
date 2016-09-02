@@ -15,7 +15,7 @@ Vue.component('panel', component('pages/panel'));
 let showWelcomeScreen = LocalStorage.get('welcomeScreen');
 
 module.exports = new Vue({
-  el: 'body',
+  el: '#app',
   data: () => {
     return {
       currentView: 'home',

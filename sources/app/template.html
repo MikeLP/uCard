@@ -12,10 +12,12 @@
     <script async type="text/javascript" src="main.js"></script>
 </head>
 
-<body id="app">
+<body>
+  <main id="app">
     <intro v-if="showWelcomeScreen"></intro>
     <navigation></navigation>
     <cards keep-alive v-if="currentView === 'cards'"></cards>
+  </main>
 </body>
 
 </html>

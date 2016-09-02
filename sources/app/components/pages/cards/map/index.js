@@ -28,10 +28,6 @@ module.exports = {
     map.show();
   },
 
-  activated() {
-    console.log('activated???');
-  },
-
   /**
    *
    * @returns {{config: {cache: boolean, provider: string, shape: {color: string, weight: number}}}}

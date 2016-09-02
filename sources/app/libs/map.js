@@ -98,8 +98,7 @@ class Map {
     });
 
     tileLayer.addTo(this.map);
-
-    console.log('???');
+    
     return this;
   }
 

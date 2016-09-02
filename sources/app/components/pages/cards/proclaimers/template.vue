@@ -1,4 +1,4 @@
-<div class="proclaimers">
+<div class="proclaimers no-drag">
   <div v-if="items.length > 0" class="list">
     <div v-for="(item, index) of items" class="proclaimer">
         <div class="fullname">

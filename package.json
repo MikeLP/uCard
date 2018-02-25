@@ -30,10 +30,12 @@
     },
     "win": {}
   },
-  "contributors": [{
-    "name": "Yan Zhabin",
-    "email": "iyanello@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "Yan Zhabin",
+      "email": "iyanello@gmail.com"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/MikeLP/uCard/issues",
     "email": "iyanello@gmail.com"
@@ -54,7 +56,7 @@
   "license": "ISC",
   "dependencies": {
     "ionicons": "^3.0.0",
-    "knex": "^0.11.9",
+    "knex": "^0.14.3",
     "leaflet": "^1.0.0-rc.3",
     "leaflet-draw": "^0.3.2",
     "lodash": "^4.14.1",

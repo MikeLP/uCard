@@ -30,10 +30,12 @@
     },
     "win": {}
   },
-  "contributors": [{
-    "name": "Yan Zhabin",
-    "email": "iyanello@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "Yan Zhabin",
+      "email": "iyanello@gmail.com"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/MikeLP/uCard/issues",
     "email": "iyanello@gmail.com"
@@ -60,7 +62,7 @@
     "lodash": "^4.14.1",
     "moment": "^2.14.1",
     "normalize.css": "^4.2.0",
-    "sqlite3": "^3.1.4",
+    "sqlite3": "^4.0.0",
     "vue": "^2.0.0-beta.7"
   },
   "devDependencies": {
